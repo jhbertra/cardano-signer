@@ -507,7 +507,7 @@ async function main() {
 				var content = `{ "workMode": "${workMode}", `;
 				if ( sign_data_hex.length <= 2000000 ) { content += `"signDataHex": "${sign_data_hex}", `; } //only include the sign_data_hex if it is less than 2M of chars
 				if ( sign_addr ) { content += `"addressHex": "${sign_addr.hex}", "addressType": "${sign_addr.type}", "addressNetwork": "${sign_addr.network}", `; } //only include the signing address if provided
-				content += `"signature": "${signature}", "secretKey": "${prvKeyHex}", "publicKey": "${pubKey}" }`;
+				content += `"signature": "${signature}", "publicKey": "${pubKey}" }`;
 			} else { //generate content in text format
 				var content = signature + " " + pubKey;
 			}
@@ -671,7 +671,7 @@ async function main() {
 				if ( isHashed ) { content += `"hashedInputDataHex": "${payload_data_hex}", `; } //only include the payload_data_hex(now in hashed format) if isHashed is true
 				if ( Sig_structure_cbor_hex.length <= 2000000 ) { content += `"signDataHex": "${Sig_structure_cbor_hex}", `; } //only include the Sig_structure_cbor_hex if it is less than 2M of chars
 				content += `"signature": "${signature_hex}",`;
-				content += `"secretKey": "${prvKeyHex}", "publicKey": "${pubKey}", `
+				content += `"publicKey": "${pubKey}", `
 				content += `"output": { "signedMessage": "${signedMsg}", "COSE_Sign1_hex": "${COSE_Sign1_cbor_hex}", "COSE_Key_hex": "${COSE_Key_cbor_hex}" } }`;
 
 			} else { //generate content in text format
@@ -837,7 +837,7 @@ async function main() {
 				var content = `{ "61284": { "1": [ ${delegations} ], "2": "0x${pubKey}", "3": "0x${rewards_addr.hex}", "4": ${nonce}, "5": ${vote_purpose} }, "61285": { "1": "0x${signature}" } }`;
 			} else if ( args['json-extended'] === true ) { //generate content in json format with additional fields
 				var prvKeyHex = Buffer.from(prvKey.as_bytes()).toString('hex');
-				var content = `{ "workMode": "${workMode}", "votePurpose": "${vote_purpose_description} (${vote_purpose})", "totalVoteWeight": ${total_vote_weight}, "paymentAddressHex": "${rewards_addr.hex}", "paymentAddressType": "${rewards_addr.type}", "paymentAddressNetwork": "${rewards_addr.network}", "signDataHex": "${sign_data_hex}", "signature": "${signature}", "secretKey": "${prvKeyHex}", "publicKey": "${pubKey}", `;
+				var content = `{ "workMode": "${workMode}", "votePurpose": "${vote_purpose_description} (${vote_purpose})", "totalVoteWeight": ${total_vote_weight}, "paymentAddressHex": "${rewards_addr.hex}", "paymentAddressType": "${rewards_addr.type}", "paymentAddressNetwork": "${rewards_addr.network}", "signDataHex": "${sign_data_hex}", "signature": "${signature}", "publicKey": "${pubKey}", `;
 				var delegations = [];
 				for (let cnt = 0; cnt < all_vote_keys_array.length; cnt++) {
 				delegations.push(`[ "0x${all_vote_keys_array[cnt]}", ${all_weights_array[cnt]} ]`)
@@ -944,7 +944,7 @@ async function main() {
 				var content = `{ "61286": { "1": "0x${pubKey}", "2": ${nonce}, "3": ${vote_purpose} }, "61285": { "1": "0x${signature}" } }`;
 			} else if ( args['json-extended'] === true ) { //generate content in json format with additional fields
 				var prvKeyHex = Buffer.from(prvKey.as_bytes()).toString('hex');
-				var content = `{ "workMode": "${workMode}", "votePurpose": "${vote_purpose_description}", "signDataHex": "${sign_data_hex}", "signature": "${signature}", "secretKey": "${prvKeyHex}", "publicKey": "${pubKey}", `;
+				var content = `{ "workMode": "${workMode}", "votePurpose": "${vote_purpose_description}", "signDataHex": "${sign_data_hex}", "signature": "${signature}", "publicKey": "${pubKey}", `;
 				content += `"output": { "cbor": "${deregistrationCBOR}", "json": { "61286": { "1": "0x${pubKey}", "2": ${nonce}, "3": ${vote_purpose} }, "61285": { "1": "0x${signature}" } } } }`;
 			} else { //generate content in text format
 				var content = `${deregistrationCBOR}`;
