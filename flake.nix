@@ -16,9 +16,22 @@
       forEachSystem = nixpkgs.lib.genAttrs (import systems);
     in
     {
-      packages = forEachSystem (system: {
-        devenv-up = self.devShells.${system}.default.config.procfileScript;
-      });
+      packages = forEachSystem
+        (system:
+          let
+            pkgs = nixpkgs.legacyPackages.${system};
+          in
+          rec {
+            default = cardano-signer;
+            cardano-signer = pkgs.buildNpmPackage rec {
+              pname = "cardano-signer";
+              version = "0.0.0";
+              src = ./src;
+              dontNpmBuild = true;
+              npmDepsHash = "sha256-Y2RBTnIgnF3JgyyuSLSZZP09rpckHTkI/xLqXKj7+iQ=";
+              NODE_OPTIONS = "--openssl-legacy-provider";
+            };
+          });
 
       devShells = forEachSystem
         (system:
@@ -30,18 +43,12 @@
               inherit inputs pkgs;
               modules = [
                 {
-                  # https://devenv.sh/reference/options/
-                  packages = [ pkgs.hello ];
-
-                  enterShell = ''
-                    hello
-                  '';
+                  packages = [ self.packages.${system}.cardano-signer ];
                   languages.nix.enable = true;
                   languages.javascript.enable = true;
                   pre-commit.hooks = {
                     nixpkgs-fmt.enable = true;
                   };
-                  processes.hello.exec = "hello";
                 }
               ];
             };
